@@ -33,7 +33,14 @@
                     }
                 },
                 dateClick:function(info){
+                    clearForm();
                     $('#date').val(info.dateStr);
+
+                    $("#btnAdd").prop("disabled", false);
+                    $("#btnEdit").prop("disabled", true);
+                    $("#btnDelete").prop("disabled", true);
+                    $("#btnCancel").prop("disabled", false);
+
                     $('#createModal').modal('toggle');
                     console.log(info.event.id);
                 },
@@ -51,13 +58,29 @@
                     minutes = (minutes<10)?"0"+minutes:minutes;
                     time = (hour+":"+minutes)
 
+
+                    hourEnd = (info.event.end.getHours());
+                    hourEnd = (hourEnd<10)?"0"+hourEnd:hourEnd;
+                    minutesEnd = (info.event.end.getMinutes());
+                    minutesEnd = (minutesEnd<10)?"0"+minutesEnd:minutesEnd;
+                    timeEnd = (hourEnd+":"+minutesEnd)
+
                     $('#id').val(info.event.id);   
                     $('#title').val(info.event.title);   
                     $('#date').val(date);
                     $('#start').val(time);
+                    $('#end').val(timeEnd);
                     $('#description').val(info.event.extendedProps.description);
                     $('#color').val(info.event.backgroundColor);
                     console.log(info.event.id);
+
+
+                    $("#btnAdd").prop("disabled", true);
+                    $("#btnEdit").prop("disabled", false);
+                    $("#btnDelete").prop("disabled", false);
+                    $("#btnCancel").prop("disabled", false);
+
+
                     $('#createModal').modal('toggle');
                 },
                 events:"{{ url ('event/show') }}"
@@ -89,7 +112,7 @@
                     color:$('#color').val(),
                     textColor:'#FFFFFF',
                     start:$('#date').val()+" "+$('#start').val(),
-                    end:$('#date').val()+" "+$('#start').val(),
+                    end:$('#date').val()+" "+$('#end').val(),
 
                     '_token':$("meta[name='csrf-token']").attr("content"),
                     '_method':method
@@ -112,6 +135,16 @@
                     }
                 });
             }
+
+            function clearForm(){
+                $('#id').val("");   
+                $('#title').val("");   
+                $('#date').val("");
+                $('#start').val("");
+                $('#description').val("");
+                $('#color').val("");
+            }
+
         });
     </script>
 
@@ -135,10 +168,11 @@
                 <input type="hidden" name="id" id="id">
                 Titulo
                 <input type="text" name="title" id="title"> <br>
-                Fecha
-                <input type="text" name="date" id="date"> <br>
-                Hora
-                <input type="text" name="start" id="start"> <br>
+                <input type="hidden" name="date" id="date"> <br>
+                Inicio
+                <input type="time" min="07:00" max="24:00" step="600" name="start" id="start"> <br>
+                Final
+                <input type="time" min="07:00" max="24:00" step="600" name="end" id="end"> <br>
                 Descripcion
                 <textarea name="description" id="description"> </textarea> <br>
                 Color
