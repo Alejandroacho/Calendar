@@ -71,6 +71,7 @@
                 sendData('', eventObj);
             });
 
+
             $('#btnDelete').click(function(){
                 eventObj=recolectData("DELETE");
                 sendData('/'+$('#id').val(), eventObj);
