@@ -41,6 +41,8 @@ class EventsController extends Controller
 
     public function destroy($id)
     {
-        //
+        $event = Event::findOrFail($id);
+        Event::destroy($id);
+        return response()->json($id);
     }
 }

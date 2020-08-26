@@ -35,12 +35,26 @@
                 dateClick:function(info){
                     $('#date').val(info.dateStr);
                     $('#createModal').modal('toggle');
+                    console.log(info.event.id);
                 },
                 eventClick:function(info){
+
+                    month = (info.event.start.getMonth()+1);
+                    month = (month<10)?"0"+month:month;
+                    day = (info.event.start.getDate());
+                    day = (day<10)?"0"+day:day;
+                    year = (info.event.start.getFullYear());
+                    date = (year+"-"+month+"-"+day);
+                    hour = (info.event.start.getHours());
+                    hour = (hour<10)?"0"+hour:hour;
+                    minutes = (info.event.start.getMinutes());
+                    minutes = (minutes<10)?"0"+minutes:minutes;
+                    time = (hour+":"+minutes)
+
                     $('#id').val(info.event.id);   
                     $('#title').val(info.event.title);   
-                    $('#date').val(info.event.start);
-                    $('#start').val(info.event.start);
+                    $('#date').val(date);
+                    $('#start').val(time);
                     $('#description').val(info.event.extendedProps.description);
                     $('#color').val(info.event.backgroundColor);
                     console.log(info.event.id);
@@ -53,12 +67,18 @@
 
             $('#btnAdd').click(function(){
                 eventObj=recolectData("POST");
+                console.log(eventObj);
                 sendData('', eventObj);
+            });
+
+            $('#btnDelete').click(function(){
+                eventObj=recolectData("DELETE");
+                sendData('/'+$('#id').val(), eventObj);
             });
 
             function recolectData(method){
                 newEvent={
-
+                    id:$('#id').val(),
                     title:$('#title').val(),
                     description:$('#description').val(),
                     color:$('#color').val(),
