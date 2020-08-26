@@ -12,14 +12,9 @@ class EventsController extends Controller
         return view("events.index");
     }
 
-    public function create()
-    {
-        //
-    }
-
     public function store(Request $request)
     {
-        $eventData=request()->except(['_token', '_method']);
+        $eventData = request()->except(['_token', '_method']);
         Event::create($eventData);
         print_r($eventData);
     }
@@ -30,14 +25,11 @@ class EventsController extends Controller
         return response()->json($events);
     }
 
-    public function edit($id)
-    {
-        //
-    }
-
     public function update(Request $request, $id)
     {
-        //
+        $eventData = request()->except(['_token', '_method']);
+        $event = Event::where('id', $id)->update($eventData);
+        return response()->json($event);
     }
 
     public function destroy($id)
