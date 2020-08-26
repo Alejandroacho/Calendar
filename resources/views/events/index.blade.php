@@ -33,27 +33,49 @@
                     }
                 },
                 dateClick:function(info){
-                     $('#exampleModal').modal('toggle');
-                     calendar.addEvent({title:"Evento x", date:info.dateStr});
+                    $('#date').val(info.dateStr);
+                    $('#exampleModal').modal('toggle');
+                    calendar.addEvent({title:"Evento x", date:info.dateStr});
                 },
-                eventClick:function(info){
-                    
-                },
-                events:[
-                {
-                    title:"Mi evento 1",
-                    start:"2020-08-14 13:30:00"
-                },{
-                    title:"Mi evento 2",
-                    start:"2020-08-17 13:30:00",
-                    end:"2020-08-19 13:30:00",
-                    color:"#FFCCAA",
-                    textColor:"#000000"
-                }
-                ]
+                events:"{{ url ('event/show') }}"
             });
             calendar.setOption('locale', 'Es');
             calendar.render();
+
+            $('#btnAdd').click(function(){
+                eventObj=recolectData("POST");
+                sendData('', eventObj);
+            });
+
+            function recolectData(method){
+                newEvent={
+
+                    title:$('#title').val(),
+                    description:$('#description').val(),
+                    color:$('#color').val(),
+                    textColor:'#FFFFFF',
+                    start:$('#date').val()+" "+$('#start').val(),
+                    end:$('#date').val()+" "+$('#start').val(),
+
+                    '_token':$("meta[name='csrf-token']").attr("content"),
+                    '_method':method
+                }
+                return(newEvent);
+            }
+
+            function sendData(action, eventObj){
+                $.ajax({
+                    type:"POST",
+                    url:"{{url('/event')}}"+action,
+                    data:eventObj,
+                    success: function(msg){
+                        console.log(msg);
+                    },
+                    error: function(){
+                        alert("Hubo un error");
+                    }
+                });
+            }
         });
     </script>
 
@@ -74,24 +96,22 @@
                 </button>
             </div>
             <div class="modal-body">
-                ID:
-                <input type="text" name="id" id="id"> <br>
-                Fecha
-                <input type="text" name="date" id="date"> <br>
                 Titulo
                 <input type="text" name="title" id="title"> <br>
                 Fecha
+                <input type="text" name="date" id="date"> <br>
+                Hora
                 <input type="text" name="start" id="start"> <br>
                 Descripcion
                 <textarea name="description" id="description"> </textarea> <br>
                 Color
-                <input type="text" name="color" id="color"><br>
+                <input type="color" name="color" id="color"><br>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Agregar</button>
-                <button type="button" class="btn btn-warning">Modificar</button>
-                <button type="button" class="btn btn-danger">Borrar</button>
-                <button type="button" class="btn btn-secondary">Cancelar</button>
+                <button id="btnAdd" type="button" class="btn btn-success">Agregar</button>
+                <button id="btnEdit" type="button" class="btn btn-warning">Editar</button>
+                <button id="btnDelete" type="button" class="btn btn-danger">Borrar</button>
+                <button id="btnCancel" type="button" class="btn btn-secondary">Cancelar</button>
             </div>
             </div>
         </div>
