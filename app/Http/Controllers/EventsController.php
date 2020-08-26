@@ -21,7 +21,6 @@ class EventsController extends Controller
     {
         $eventData=request()->except(['_token', '_method']);
         Event::create($eventData);
-        print_r($eventData);
     }
 
     public function show($id)
